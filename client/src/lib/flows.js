@@ -1,20 +1,20 @@
-import { get } from "svelte/store";
-import {
-  submitPrompt,
-  loadPreview,
-  savePromptContent,
-  updatePromptContent,
-} from "./api";
-import genieServiceFE from "./genieServiceFE";
-import {
-  contentStore,
-  previewStore,
-  uiStateStore,
-  setUiLoading,
-  setUiSuccess,
-  setUiError,
-  persistContent,
-} from "../stores";
+import { promptStore, previewStore, uiStateStore } from "../stores";
+import { submitPrompt } from "./api";
+
+// Simple flow: submit → update store → handle state
+export async function generateAndPreview(prompt) {
+  uiStateStore.set({ status: "loading", message: "" });
+  try {
+    const content = await submitPrompt(prompt);
+    previewStore.set(content);
+    uiStateStore.set({ status: "idle", message: "" });
+  } catch (error) {
+    uiStateStore.set({
+      status: "error",
+      message: "Failed to generate preview",
+    });
+  }
+}
 
 const DEFAULT_TIMEOUT_MS = 10000; // 10s
 

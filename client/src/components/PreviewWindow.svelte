@@ -1,11 +1,16 @@
 <script>
-  import { contentStore, previewStore, uiStateStore, setUiLoading, setUiSuccess, setUiError } from '../stores';
-  import { previewFromContent } from '../lib/flows';
-  import Spinner from './Spinner.svelte';
-  import PreviewSkeleton from './PreviewSkeleton.svelte';
-  import { onMount } from 'svelte';
+  import { previewStore, uiStateStore } from '../stores';
+</script>
 
-  import { debounce } from '../lib/utils';
+{#if $uiStateStore.status === 'loading'}
+  <div>Loading...</div>
+{:else if $uiStateStore.status === 'error'}
+  <div>{$uiStateStore.message}</div>
+{:else}
+  <div data-testid="preview-content">
+    {$previewStore}
+  </div>
+{/if}
 
   let content;
   contentStore.subscribe(value => {

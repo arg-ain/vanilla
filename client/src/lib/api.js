@@ -1,13 +1,13 @@
-import Logger from "./logger";
-
-// API utilities with retry logic
-const DEFAULT_CONFIG = {
-  maxRetries: 3,
-  initialBackoffMs: 1000,
-  maxBackoffMs: 10000,
-  // Do NOT retry on 401 by default — auth failures should surface immediately.
-  retryableStatuses: [408, 429, 500, 502, 503, 504],
-};
+// Single responsibility: POST prompt, return content
+export async function submitPrompt(prompt) {
+  const response = await fetch("/prompt", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt }),
+  });
+  const data = await response.json();
+  return data.content; // Returns tripled text
+}
 
 async function fetchWithRetry(url, options = {}) {
   const config = {

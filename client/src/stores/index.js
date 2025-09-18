@@ -1,10 +1,13 @@
-// @ts-nocheck -- dev-only store instrumentation file; suppress TS diagnostics
 import { writable } from "svelte/store";
-import { savePromptContent, updatePromptContent } from "../lib/api";
 
-// DEV-only helper: wrap writable so set/update calls are logged during development
-const IS_DEV =
-  typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV;
+// Only these three stores - no instrumentation, no dev wrappers
+export const promptStore = writable(""); // User input
+export const previewStore = writable(""); // Display content
+export const uiStateStore = writable({
+  // UI state management
+  status: "idle",
+  message: "",
+});
 
 function devWritable(name, initial) {
   const w = writable(initial);
