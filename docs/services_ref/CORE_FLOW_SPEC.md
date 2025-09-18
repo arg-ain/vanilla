@@ -6,6 +6,39 @@
 
 Reference: [MIN_CLIENT_SPEC.md](MIN_CLIENT_SPEC.md)
 
+## TODO: Create non-destructive backups of preview frontend files
+
+Before making changes for the preview flow, create .bak copies of the following files (they are listed in this spec and are required for the minimal preview implementation):
+
+1. `client/src/stores/index.js`
+2. `client/src/lib/api.js`
+3. `client/src/lib/flows.js`
+4. `client/src/components/PreviewWindow.svelte`
+
+Rules:
+
+- Only create a backup if the original file exists.
+- Do NOT overwrite an existing `.bak` file; if a `.bak` already exists, skip that file and report it.
+- Place the backup in the same directory as the original (`filename.bak`).
+- Do NOT commit or push backup files unless explicitly instructed.
+
+Action: Run a simple script or `cp` commands to create these backups prior to editing. Example:
+
+```bash
+# Example (run from repository root)
+for f in \
+  client/src/stores/index.js \
+  client/src/lib/api.js \
+  client/src/lib/flows.js \
+  client/src/components/PreviewWindow.svelte; do
+  [ -f "$f" ] || { echo "MISSING: $f"; continue; }
+  [ -f "$f.bak" ] && { echo "SKIP (bak exists): $f"; continue; }
+  cp "$f" "$f.bak" && echo "BACKED UP: $f -> $f.bak"
+done
+```
+
+Proceed only after backups are verified.
+
 ## Sample Demo Scope
 
 ```
